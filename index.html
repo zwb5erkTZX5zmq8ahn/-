@@ -1,131 +1,71 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a//dev/null b/index.html
-index 0000000000000000000000000000000000000000..918961c5dc16b21f862b946a474a2c38daead96c 100644
---- a//dev/null
-+++ b/index.html
-@@ -0,0 +1,122 @@
-+<!DOCTYPE html>
-+<html lang="ja">
-+<head>
-+  <meta charset="UTF-8">
-+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-+  <title>シンプルカレンダー</title>
-+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css" integrity="sha512-hX1YgnSUZXoqBYwygJyI072QtdgQXl3k5ufADG7n2AFD+a83H8XTur2qxGn8pY/+bexdFv+xo5jBqFaUG2Rjlw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-+  <style>
-+    body {
-+      font-family: "Helvetica Neue", Arial, sans-serif;
-+      background: #f5f5f5;
-+      color: #333;
-+      display: flex;
-+      align-items: center;
-+      justify-content: center;
-+      min-height: 100vh;
-+      margin: 0;
-+      padding: 16px;
-+    }
-+
-+    .calendar {
-+      background: #fff;
-+      border-radius: 12px;
-+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-+      padding: 24px;
-+      width: min(92vw, 420px);
-+    }
-+
-+    .calendar__header {
-+      display: flex;
-+      align-items: center;
-+      justify-content: space-between;
-+      margin-bottom: 16px;
-+    }
-+
-+    .calendar__title {
-+      font-size: 1.5rem;
-+      font-weight: 600;
-+    }
-+
-+    .calendar__controls {
-+      display: flex;
-+      gap: 8px;
-+    }
-+
-+    .calendar__button {
-+      background: none;
-+      border: none;
-+      padding: 6px 10px;
-+      border-radius: 6px;
-+      cursor: pointer;
-+      font-size: 1.1rem;
-+      transition: background 0.2s ease;
-+    }
-+
-+    .calendar__button:hover {
-+      background: rgba(0, 0, 0, 0.05);
-+    }
-+
-+    .calendar__weekday-row,
-+    .calendar__days {
-+      display: grid;
-+      grid-template-columns: repeat(7, 1fr);
-+      gap: 6px;
-+      text-align: center;
-+    }
-+
-+    .calendar__weekday-row span {
-+      font-weight: 600;
-+      color: #777;
-+    }
-+
-+    .calendar__day {
-+      background: #f8f8f8;
-+      border-radius: 6px;
-+      padding: 10px 0;
-+      transition: transform 0.1s ease, box-shadow 0.1s ease;
-+    }
-+
-+    .calendar__day--today {
-+      background: #0078d4;
-+      color: white;
-+      box-shadow: 0 6px 20px rgba(0, 120, 212, 0.35);
-+    }
-+
-+    .calendar__day--inactive {
-+      opacity: 0.3;
-+    }
-+
-+    .calendar__day:not(.calendar__day--inactive):hover {
-+      transform: translateY(-2px);
-+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-+    }
-+  </style>
-+</head>
-+<body>
-+  <main class="calendar">
-+    <header class="calendar__header">
-+      <div class="calendar__controls">
-+        <button class="calendar__button" id="prev-month" aria-label="前の月">‹</button>
-+      </div>
-+      <div class="calendar__title" id="calendar-title">2024年1月</div>
-+      <div class="calendar__controls">
-+        <button class="calendar__button" id="next-month" aria-label="次の月">›</button>
-+      </div>
-+    </header>
-+    <section aria-label="月間カレンダー">
-+      <div class="calendar__weekday-row">
-+        <span>日</span>
-+        <span>月</span>
-+        <span>火</span>
-+        <span>水</span>
-+        <span>木</span>
-+        <span>金</span>
-+        <span>土</span>
-+      </div>
-+      <div class="calendar__days" id="calendar-days"></div>
-+    </section>
-+  </main>
-+  <script src="script.js"></script>
-+</body>
-+</html>
- 
-EOF
-)
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>シンプル月間カレンダー</title>
+  <style>
+    :root { --border:#e5e7eb; --text:#111827; --muted:#6b7280; --accent:#2563eb; --bg:#ffffff;}
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Noto Sans JP", "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text); background: var(--bg);
+    }
+    .wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    .toolbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;
+    }
+    .title { font-size: 20px; font-weight: 600; }
+    .btns { display: flex; gap: 8px; }
+    button {
+      border: 1px solid var(--border); background: #fff; padding: 6px 10px; border-radius: 8px; cursor: pointer;
+    }
+    button:hover { background: #f9fafb; }
+
+    .weekday {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      border-top: 1px solid var(--border); border-left: 1px solid var(--border);
+    }
+    .weekday div {
+      padding: 8px; font-size: 12px; color: var(--muted); text-align: center;
+      border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: #fafafa; font-weight: 600;
+    }
+    .grid {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      border-left: 1px solid var(--border); border-top: 1px solid var(--border);
+    }
+    .cell {
+      position: relative; min-height: 110px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 6px;
+    }
+    .date {
+      position: absolute; top: 6px; right: 8px; font-size: 12px; color: var(--muted);
+    }
+    .other-month .date { color: #d1d5db; }
+    .today .date { color: #fff; background: var(--accent); border-radius: 12px; padding: 2px 6px; }
+    .event {
+      margin-top: 22px; display: inline-block; font-size: 12px; line-height: 1.4;
+      background: #e0f2fe; border: 1px solid #bae6fd; padding: 2px 6px; border-radius: 6px;
+      max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="toolbar">
+      <div class="btns">
+        <button id="prev">← 前の月</button>
+        <button id="today">今日</button>
+        <button id="next">次の月 →</button>
+      </div>
+      <div class="title" id="title"></div>
+    </div>
+
+    <div class="weekday" id="weekday"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
